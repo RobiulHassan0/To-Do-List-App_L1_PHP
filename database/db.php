@@ -10,7 +10,10 @@ class Database{
     public function __construct()
     {
         try{
-            $this->connection = new mysqli($this->host, $this->dbname, $this->username, $this->password);
+            $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbname);
+            if($this->connection->connect_error){
+                throw new Exception("Connection Failed " . $this->connection->connect_error);
+            }
         }catch(Exception $e){
             echo $e->getMessage();
         }
