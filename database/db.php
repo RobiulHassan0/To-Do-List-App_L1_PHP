@@ -5,7 +5,7 @@ class Database{
     private $dbname = 'todo_app';
     private $username = 'robin';
     private $password = '1234';
-    private $connection;
+    public $connection;
 
     public function __construct()
     {

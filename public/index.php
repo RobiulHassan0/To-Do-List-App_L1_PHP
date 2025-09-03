@@ -1,3 +1,36 @@
+<?php
+require_once __DIR__ . "../../classes/Task.php";
+require_once __DIR__ . "../../database/db.php";
+
+$db = new Database();
+$taskManager = new Task($db);
+
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])){
+  // Get data from the FORM
+  $title = $_POST['title'];
+
+  // Prepare data for the addTask function
+  $data = [
+    'title' => $title,
+    'is_completed' => 0
+  ];
+  
+  // Call addTask method to add the task
+  if($taskManager->addTask($data)){
+    header("Location: index.php");
+    exit;
+  }else{
+    header("Location: index.php?error=1");
+    exit;
+  }
+}
+
+  // Fetch tasks for displaying
+  $tasks = json_decode($taskManager->getAllTasks(), true);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,19 +56,27 @@
   </div>
 
   <!-- Task Add Form -->
-  <form class="todo-form d-flex mb-4" action="#" method="POST">
+  <form class="todo-form d-flex mb-4" method="POST">
     <input type="text" name="title" class="form-control me-2" placeholder="Enter a new task..." required>
     <button type="submit" class="btn">Add</button>
   </form>
 
   <!-- Task Item -->
+  <?php if(empty($tasks)) :?>
+    <li>No task yet. add one</li>
+  <?php else: ?>
+
+  <?php foreach ($tasks as $index => $task) :?>    
   <div class="task">
     <div class="d-flex align-items-center">
       <input class="form-check-input task-checkbox" type="checkbox">
-      <p class="task-text mb-0">Buy groceries</p>
+      <p class="task-text mb-0"><?= htmlspecialchars($task['title']) ?></p>
     </div>
     <button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
   </div>
+  <?php endforeach; ?>
+  <?php endif; ?>
+  
 
   <div class="task completed">
     <div class="d-flex align-items-center">
