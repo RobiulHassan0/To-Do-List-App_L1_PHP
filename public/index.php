@@ -34,7 +34,7 @@ $tasks = $taskManager->getAllTasks();
   </div>
 
   <!-- Task Add Form -->
-  <form action="/actions/add.php" class="todo-form d-flex mb-4" method="POST">
+  <form action="../actions/add.php" class="todo-form d-flex mb-4" method="POST">
     <input type="text" name="title" class="form-control me-2" placeholder="Enter a new task..." required>
     <button type="submit" class="btn">Add</button>
   </form>
