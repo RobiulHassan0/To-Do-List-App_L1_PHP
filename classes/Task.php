@@ -49,6 +49,15 @@ class TaskManager{
             return false; // Faild to update task
         }
     }
+    
+    public function getTaskById($id){
+        $sql = "SELECT * FROM ". $this->table ." WHERE id = ?";
+        $stmt = $this->database->connection->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
 
 
 // Get All Tasks 
@@ -56,6 +65,8 @@ class TaskManager{
         $sql = "SELECT * FROM ". $this->table;
         $result = $this->database->connection->query($sql);
         $row = $result->fetch_all(MYSQLI_ASSOC);
-        return json_encode($row, JSON_PRETTY_PRINT);
+        // return json_encode($row, JSON_PRETTY_PRINT);
+        return $row;
     }
+
 }
