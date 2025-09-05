@@ -7,15 +7,15 @@ $database = new Database();
 $taskManager = new TaskManager($database);
 
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])){
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])){
 
-    $id = intval($_POST['delete']);
+    $id = intval($_POST['id']);
 
     if($taskManager->deleteTask($id)){
-        header("Location: index.php");
+        header("Location: ../public/index.php");
         exit;
     }else{
-        header("Location: index.php?error=1");
+        header("Location: ../public/index.php?error=1");
         exit;
     }
     

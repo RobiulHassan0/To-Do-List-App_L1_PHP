@@ -7,6 +7,12 @@ $taskManager = new TaskManager($db);
 
 $tasks = $taskManager->getAllTasks();
 
+$editTask = null;
+if(isset($_GET['edit'])){
+  $editId = intval($_GET['edit']);
+  $editTask = $taskManager->getTaskById($editId);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -33,30 +39,48 @@ $tasks = $taskManager->getAllTasks();
     My To-Do List
   </div>
 
-  <!-- Task Add Form -->
-  <form action="../actions/add.php" class="todo-form d-flex mb-4" method="POST">
-    <input type="text" name="title" class="form-control me-2" placeholder="Enter a new task..." required>
-    <button type="submit" class="btn">Add</button>
+    <!-- Task Add / Edit Form -->
+  <form action="<?= $editTask ? '../actions/update.php' : '../actions/add.php' ?>" class="todo-form d-flex mb-4" method="POST">
+    
+    <?php if($editTask): ?>
+      <input type="hidden" name="id" value="<?= $editTask['id'] ?>">
+    <?php endif; ?>
+    
+    <input type="text"name="title" class="form-control me-2" value="<?= $editTask ? htmlspecialchars($editTask['title']) : '' ?>" placeholder="Enter a new task..." required>
+    
+    <button type="submit" class="btn"><?= $editTask ? 'Update' : 'Add' ?></button>
   </form>
   
   <!-- Task List -->
   <?php if(empty($tasks)): ?>
     <p>No Task yet. add one above</p>
   <?php else : ?>
-    <?php foreach($tasks as $task): ?>
-      <form class="task" action="../actions/update.php" method="POST">
-        <div class="d-flex align-items-center">
-          <input type="hidden" name="id" value="<?= htmlspecialchars($task['id']) ?>">
-          <input type="checkbox" name="is_completed" class="form-check-input task-checkbox" onchange="this.form.submit()" <?= $task['is_completed'] ? 'checked' : '' ?>>
-          <p class="task-text mb-0"><?= htmlspecialchars($task['title']) ?></p>
-        </div>
 
-        <!-- Delete Form -->
-        <form action="../actions/delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this task?');">
-          <input type="hidden" name="id" value="<?= $task['id'] ?>">
-          <button type="submit" class="delete-btn"><i class="fas fa-trash"></i></button>
+    <?php foreach($tasks as $task): ?>
+      <div class="task <?= $task['is_completed'] ? 'completed' : '' ?> d-flex align-items-center justify-content-between">
+
+        <!-- Checkbox + Title -->
+        <form action="../actions/update.php" method="POST" class="d-flex align-items-center flex-grow-1">
+            <input type="hidden" name="id" value="<?= $task['id'] ?>">
+            <input type="hidden" name="title" value="<?= htmlspecialchars($task['title'])?>">
+            
+            <input type="checkbox" name="is_completed" class="form-check-input task-checkbox me-2" onchange="this.form.submit()" <?= $task['is_completed'] ? 'checked' : '' ?> >
+
+            <p class="task-text mb-0 me-2"><?= htmlspecialchars($task['title']) ?></p>
         </form>
-      </form>
+        
+        <!-- Edit Icon -->
+        <a href="index.php?edit=<?= $task['id'] ?>" class="text-warning ms-2"><i class="fas fa-pen-to-square"></i></a>
+
+        <!-- Delete Icon -->
+        <form action="../actions/delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this task?');">
+            <input type="hidden" name="id" value="<?= $task['id'] ?>">
+            <button type="submit" class="delete-btn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+
+      </div>
     <?php endforeach; ?>
   <?php endif; ?>
 </div>

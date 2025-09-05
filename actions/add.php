@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
     
     if($title === ''){
-        header("Location: index.php?error=empty_title");
+        header("Location: ../public/index.php?error=empty_title");
         exit;
     }
 
@@ -21,10 +21,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     ];
 
     if($taskManager->addTask($data)){
-        header("Location: index.php");
+        header("Location: ../public/index.php");
         exit;
     }else{
-        header("Location: index.php?error=1");
+        header("Location: ../public/index.php?error=1");
         exit;
     }   
 

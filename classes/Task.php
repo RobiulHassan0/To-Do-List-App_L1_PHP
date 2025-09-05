@@ -11,12 +11,11 @@ class TaskManager{
 
 // Add Task
     public function addTask(array $data){
-        $sql = "INSERT INTO " . $this->table . " (title, is_completed, created_at) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO " . $this->table . " (title, is_completed) VALUES (?, ?)";
         $statements = $this->database->connection->prepare($sql);
         $is_completed = 0;
-        $created_at = date("Y-m-d H:i:s");
 
-        $statements->bind_param('sis', $data['title'], $is_completed, $created_at);
+        $statements->bind_param('si', $data['title'], $is_completed);
         if($statements->execute()){
             return true; // Task Added Successfully
         }else{

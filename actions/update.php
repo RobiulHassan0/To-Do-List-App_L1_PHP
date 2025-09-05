@@ -6,15 +6,15 @@ require_once __DIR__ . "/../classes/Task.php";
 $database = new Database();
 $taskManager = new TaskManager($database);
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : null;
+$id = isset($_POST['id']) ? intval($_POST['id']) : null;
 if($id === null || $id < 0 || $id === false){
-    header("Location: index.php");
+    header("Location: ../public/index.php");
     exit;
 }
 
 $task = $taskManager->getTaskById($id);
 if(!$task){
-    header("Location: index.php?error=not_found");
+    header("Location: ../public/index.php?error=not_found");
     exit;
 }
 
@@ -34,10 +34,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     ];
 
     if($taskManager->updateTask($data)){
-        header("Location: index.php");
+        header("Location: ../public/index.php");
         exit;
     }else{
-        header("Location: index.php?error=1");
+        header("Location: ../public/index.php?error=1");
         exit;
     }
     

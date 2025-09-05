@@ -65,7 +65,7 @@ body {
 
 .task.completed .task-text {
     text-decoration: line-through;
-    color: #888;
+    color: #00883db1;
 }
 
 .task-checkbox {
